@@ -35,8 +35,4 @@ bot.dialog('/', [
     function (session, results) {
         session.send('Hello %s!', results.response);
     }
-<<<<<<< HEAD
 ]);
-=======
-]);
->>>>>>> ae5984c6f0ad56da839f5c37f1f2774c38ff9418
