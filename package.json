@@ -1,0 +1,9 @@
+{
+"name": "botframework",
+"version": "1.0.0",
+"description": "my first  app botframework",
+"dependencies": { 
+	"botbuilder": "^3.6.0",
+ "restify": "^4.3.0"
+	}
+}
