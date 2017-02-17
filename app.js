@@ -30,9 +30,10 @@ server.post('/api/messages', connector.listen());
 
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.text(session, 'Hi! What is your name?');
+        console.log(session.message.text);
+        builder.Prompts.text(session, 'Hola Cual es tu nombre?');
     },
     function (session, results) {
-        session.send('Hello %s!', results.response);
+        session.send('Hola %s!', results.response);
     }
 ]);
