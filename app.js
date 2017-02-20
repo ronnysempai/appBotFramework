@@ -42,7 +42,7 @@ bot.dialog('/', [
             // create the card based on selection
             var selectedCardName = results.response.entity;
             //var card = createCard(selectedCardName, session);
-            var card = createHeroCard(session);
+            var card = createMyCard(session);
 
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
