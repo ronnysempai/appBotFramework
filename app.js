@@ -31,7 +31,7 @@ server.post('/api/messages', connector.listen());
 bot.dialog('/', [
     function (session) {
         console.log(session.message.text);
-        builder.Prompts.text(session, 'Hola soy el agente de recepcion de denuncias Cual es tu nombre?');
+        builder.Prompts.text(session, 'Hola, soy el agente de recepcion de denuncias Cual es tu nombre?');
         //builder.Prompts.text(session, 'Cual es tu nombre?');
     },
     function (session, results) {
