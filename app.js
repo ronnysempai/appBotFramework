@@ -41,7 +41,8 @@ bot.dialog('/', [
         if(c>0){
             // create the card based on selection
             var selectedCardName = results.response.entity;
-            var card = createCard(selectedCardName, session);
+            //var card = createCard(selectedCardName, session);
+            var card = createHeroCard(session);
 
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
@@ -50,3 +51,16 @@ bot.dialog('/', [
         
     }
 ]);
+
+function createMyCard(session) {
+    return new builder.HeroCard(session)
+        .title('Recepcion de Denuncias')
+        .subtitle(' — ')
+        .text('Recepcion de denuncias.')
+        .images([
+            builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Get Started')
+        ]);
+}
