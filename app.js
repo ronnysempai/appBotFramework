@@ -57,6 +57,6 @@ function createMyCard(session) {
             builder.CardImage.create(session, 'https://lh6.ggpht.com/U0n-NfYLqO7WMRHElgPgKyXDtDbwwzzAznk2HrL5o-rXzy-N-uqQ0qWVKDkWWz8TAaM=w300')
         ])
         .buttons([
-            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Get Started')
+            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Tome foto')
         ]);
 }
