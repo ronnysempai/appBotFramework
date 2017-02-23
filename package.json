@@ -7,6 +7,8 @@
  	"restify": "^4.3.0",
  	"bluebird": "^3.4.7",
     "restify": "^4.3.0",
+     "request": "^2.79.0",
+     "request-promise": "^4.1.1",
     "swagger-client": "^2.1.32"
 	}
 }
