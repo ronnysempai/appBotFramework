@@ -100,7 +100,7 @@ function createMyCard(session) {
 
 function createCardInformacion(session){
     var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
-    +" <b>-</b>"
+    +" <b> - </b>"
     +"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
     
     return new builder.HeroCard(session)
