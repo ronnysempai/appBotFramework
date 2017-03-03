@@ -71,7 +71,7 @@ bot.dialog('rootMenu', [
             console.log('*************** imagen***********************');
             session.send("Ahora ud puede enviar la imagen de su denuncia.");
             session.beginDialog('recibirImagen');
-            
+
         }
     }
 ]);
@@ -146,10 +146,12 @@ function recibirImagen(session){
         fileDownload.then(
             function (response) {
                 // Send reply with attachment type & size
+                var mensajeExito='La imagen ha sido cargada exitosamente.';
                 var reply = new builder.Message(session)
-                    .text('Attachment of %s type and size of %s bytes received.', attachment.contentType, response.length);
+                    //.text('Attachment of %s type and size of %s bytes received.', attachment.contentType, response.length);
+                    .text(mensajeExito);
                 console.log(attachment);
-                guardarImagen(attachment.contentUrl);    
+                //guardarImagen(attachment.contentUrl);    
                 session.send(reply);
                 session.endDialog("");
             }).catch(function (err) {
