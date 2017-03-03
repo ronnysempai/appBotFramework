@@ -71,6 +71,7 @@ bot.dialog('rootMenu', [
             console.log('*************** imagen***********************');
             session.send("Ahora ud puede enviar la imagen de su denuncia.");
             session.beginDialog('recibirImagen');
+            
         }
     }
 ]);
