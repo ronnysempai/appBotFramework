@@ -122,7 +122,7 @@ function createCardInformacionComisarias(session){
         ]);
 }
 
-function createCardInformacionHospitales(session){
+/*function createCardInformacionHospitales(session){
     //var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
     var listaComisarias="Distrito 1-Sur "
     +" <b> - </b>"
@@ -143,13 +143,33 @@ function createCardInformacionHospitales(session){
         .buttons([
             builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Mas Informacion')
         ]);
+}*/
+
+function createCardInformacionHospitales2(session) {
+    var listaComisarias="Distrito 1-Sur "
+    +" "
+    +"Distrito 2-Esteros "
+    +"Distrito 3-Nueve de Octubre "
+    +"Distrito 4-Portete "
+    +"Distrito 5-Centro ";
+    return new builder.ThumbnailCard(session)
+        .title('Hospitales')
+        .subtitle('-')
+        .text('-\n'+listaComisarias)
+        .images([
+            builder.CardImage.create(session, 'https://lh6.ggpht.com/U0n-NfYLqO7WMRHElgPgKyXDtDbwwzzAznk2HrL5o-rXzy-N-uqQ0qWVKDkWWz8TAaM=w300')
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Mas Informacion')
+        ]);
 }
+
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
             return createCardInformacionComisarias(session);
         case hospitales:
-            return createCardInformacionHospitales(session);
+            return createCardInformacionHospitales2(session);
         case denuncias:
             return 1;    
         default:
