@@ -42,8 +42,8 @@ var c=0;
 var card=1;
 var selectedCardName=3;
 var recibiendoImagen=0;
-var comisarias='Informacion de Comisarias';
-var hospitales='Informacion de Hospitales';
+var comisarias='Informacion de Comisarias \n';
+var hospitales='Informacion de Hospitales \n';
 var denuncias='Denuncias';
 var CardNames = [comisarias,hospitales,denuncias];
 
@@ -99,10 +99,38 @@ function createMyCard(session) {
         ]);
 }
 
-function createCardInformacion(session){
-    var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
+function createCardInformacionComisarias(session){
+    //var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
+    var listaComisarias="Distrito 1-Sur "
+    +" "
+    //+"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
+    +"Distrito 2-Esteros "
+    +"Distrito 3-Nueve de Octubre "
+    +"Distrito 4-Portete "
+    +"Distrito 5-Centro ";
+    
+    return new builder.HeroCard(session)
+        .title('Comisarias Comisarias')
+        .subtitle('—')
+        .text(listaComisarias)
+        .images([
+            //builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
+            builder.CardImage.create(session, 'https://lh6.ggpht.com/U0n-NfYLqO7WMRHElgPgKyXDtDbwwzzAznk2HrL5o-rXzy-N-uqQ0qWVKDkWWz8TAaM=w300')
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Mas Informacion')
+        ]);
+}
+
+function createCardInformacionHospitales(session){
+    //var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
+    var listaComisarias="Distrito 1-Sur "
     +" <b> - </b>"
-    +"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
+    //+"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
+    +"Distrito 2-Esteros "
+    +"Distrito 3-Nueve de Octubre "
+    +"Distrito 4-Portete "
+    +"Distrito 5-Centro ";
     
     return new builder.HeroCard(session)
         .title('Comisarias Comisarias')
@@ -119,13 +147,13 @@ function createCardInformacion(session){
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return createCardInformacion(session);
+            return createCardInformacionComisarias(session);
         case hospitales:
-            return null;
+            return createCardInformacionHospitales(session);
         case denuncias:
-            return 1//recibirImagen(session);    
+            return 1;    
         default:
-            return 1//recibirImagen(session);
+            return 0;
     }
 }
 
