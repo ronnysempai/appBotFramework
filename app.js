@@ -43,7 +43,7 @@ var card=1;
 var selectedCardName=3;
 var recibiendoImagen=0;
 var comisarias='Informacion de Comisarias \n';
-var hospitales='Informacion de Hospitales \n';
+var hospitales='Hospitales \n';
 var denuncias='Denuncias';
 var CardNames = [comisarias,hospitales,denuncias];
 
@@ -152,7 +152,7 @@ function createCardInformacionHospitales2(session) {
     +"Distrito 3-Nueve de Octubre "
     +"Distrito 4-Portete "
     +"Distrito 5-Centro ";
-    
+
     return new builder.ThumbnailCard(session)
         .title('Hospitales')
         .subtitle('-')
