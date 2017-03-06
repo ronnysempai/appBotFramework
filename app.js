@@ -152,6 +152,7 @@ function createCardInformacionHospitales2(session) {
     +"Distrito 3-Nueve de Octubre "
     +"Distrito 4-Portete "
     +"Distrito 5-Centro ";
+    
     return new builder.ThumbnailCard(session)
         .title('Hospitales')
         .subtitle('-')
