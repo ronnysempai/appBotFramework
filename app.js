@@ -3,7 +3,11 @@ var builder = require('botbuilder');
 var Promise = require('bluebird');
 var request = require('request-promise').defaults({ encoding: null });
 var http = require('http');
-var fs = require('fs');
+var fs = require('fs'),
+    needle = require('needle'),
+    //request = require('request'),
+    speechService = require('./speech-service.js'),
+    url = require('url');
 //=========================================================
 // Bot Setup
 //=========================================================
@@ -60,19 +64,49 @@ bot.dialog('rootMenu', [
     },
     function (session, results){
         
-        selectedCardName = results.response.entity;
-        console.log(results.response);
-        if(selectedCardName!=denuncias){
-            card = seleccionarOpcion(selectedCardName, session);
+        selectedOption = results.response.entity;
+        
+        if(selectedOption!=denuncias){
+            card = seleccionarOpcion(selectedOption, session);
         // attach the card to the reply message
         var msg = new builder.Message(session).addAttachment(card);
         session.send(msg);    
         }else{
-            console.log('*************** imagen***********************');
-            session.send("Ahora ud puede enviar la imagen de su denuncia.");
-            session.beginDialog('recibirImagen');
+            session.beginDialog('denuncias');
 
         }
+         
+    }
+]);
+
+bot.dialog('denuncias', [
+    function (session, args) {
+        builder.Prompts.choice(session, "Escoja una opcion.", ["Texto","Voz","Foto"], {
+            maxRetries: 3,
+            retryPrompt: 'disculpe, se ingreso una opcion invalida'
+        });
+        
+    },
+    function (session, results) {
+
+        var opcion = results.response.entity;
+        
+        switch (opcion){
+            case 'Foto':
+                    console.log('*************** imagen***********************');
+                    session.send("Ahora ud puede enviar la imagen de su denuncia.");
+                    session.beginDialog('recibirImagen');    
+                break;
+            case 'Voz':
+                session.beginDialog('enviaVoz');
+                break;
+            case 'Texto':
+                session.beginDialog('ingreseTexto');
+                break;  
+             default:
+                session.endDialog("");     
+                break;
+            }
     }
 ]);
 
@@ -85,6 +119,87 @@ bot.dialog('recibirImagen', [
         
     }
 ]);
+/*codigo para voz*/
+bot.dialog('enviaVoz', session => {
+    if (hasAudioAttachment(session)) {
+        var stream = getAudioStreamFromAttachment(session.message.attachments[0]);
+        speechService.getTextFromAudioStream(stream)
+            .then(text => {
+                session.send(processText(text));
+            })
+            .catch(error => {
+                session.send('Oops! Something went wrong. Try again later.');
+                console.error(error);
+            });
+    } else {
+        session.send('Did you upload an audio file? I\'m more of an audible person. Try sending me a wav file');
+    }
+});
+
+
+//=========================================================
+// Utilities
+//=========================================================
+const hasAudioAttachment = session => {
+    return session.message.attachments.length > 0 &&
+        (session.message.attachments[0].contentType === 'audio/wav' ||
+         session.message.attachments[0].contentType === 'application/octet-stream');
+};
+
+const getAudioStreamFromAttachment = attachment => {
+    var headers = {};
+    if (isSkypeAttachment(attachment)) {
+        // The Skype attachment URLs are secured by JwtToken,
+        // you should set the JwtToken of your bot as the authorization header for the GET request your bot initiates to fetch the image.
+        // https://github.com/Microsoft/BotBuilder/issues/662
+        connector.getAccessToken((error, token) => {
+            var tok = token;
+            headers['Authorization'] = 'Bearer ' + token;
+            headers['Content-Type'] = 'application/octet-stream';
+
+            return needle.get(attachment.contentUrl, { headers: headers });
+        });
+    }
+
+    headers['Content-Type'] = attachment.contentType;
+    return needle.get(attachment.contentUrl, { headers: headers });
+};
+
+const isSkypeAttachment = attachment => {
+    if (url.parse(attachment.contentUrl).hostname.substr(-'skype.com'.length) === 'skype.com') {
+        return true;
+    }
+
+    return false;
+};
+
+const processText = (text) => {
+    var result = 'You said: ' + text + '.';
+    if (result.match("nombre")) {
+        var iNombre=text.indexOf("nombre es")+9;
+        var fNonbre=text.indexOf(" ",iNombre);
+        var nombre=text.substr(iNombre, fNonbre);
+        result="Hola "+nombre+' '+result;
+    }
+    if (text && text.length > 0) {
+        const wordCount = text.split(' ').filter(x => x).length;
+        result += '\n\nWord Count: ' + wordCount;
+
+        const characterCount = text.replace(/ /g, '').length;
+        result += '\n\nCharacter Count: ' + characterCount;
+
+        const spaceCount = text.split(' ').length - 1;
+        result += '\n\nSpace Count: ' + spaceCount;
+
+        const m = text.match(/[aeiou]/gi);
+        const vowelCount = m === null ? 0 : m.length;
+        result += '\n\nVowel Count: ' + vowelCount;
+    }
+
+    return result;
+};
+
+/*------------------------------*/
 function createMyCard(session) {
     return new builder.HeroCard(session)
         .title('Atencion Ciudadana')

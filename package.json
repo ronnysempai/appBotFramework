@@ -4,11 +4,14 @@
 "description": "my first  app botframework",
 "dependencies": { 
 	"botbuilder": "^3.6.0",
+	"bluebird": "^3.4.7",
+	"dotenv-extended": "^1.0.4",
+	"needle": "^1.4.3",
+	"node-uuid": "^1.4.7",
+	"request": "^2.79.0",
+    "request-promise": "^4.1.1",
  	"restify": "^4.3.0",
- 	"bluebird": "^3.4.7",
     "restify": "^4.3.0",
-     "request": "^2.79.0",
-     "request-promise": "^4.1.1",
     "swagger-client": "^2.1.32"
 	}
 }
