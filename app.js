@@ -126,13 +126,14 @@ bot.dialog('enviaVoz', session => {
         speechService.getTextFromAudioStream(stream)
             .then(text => {
                 session.send(processText(text));
+                session.endDialog("");
             })
             .catch(error => {
                 session.send('Oops! Something went wrong. Try again later.');
                 console.error(error);
             });
     } else {
-        session.send('Did you upload an audio file? I\'m more of an audible person. Try sending me a wav file');
+        session.send('Enviaste una nota de voz? Escucho mas de una persona. Trata de nuevo , por favor');
     }
 });
 
@@ -142,7 +143,8 @@ bot.dialog('enviaVoz', session => {
 //=========================================================
 const hasAudioAttachment = session => {
     return session.message.attachments.length > 0 &&
-        (session.message.attachments[0].contentType === 'audio/wav' ||
+        (session.message.attachments[0].contentType === 'audio/wav' || 
+            session.message.attachments[0].contentType === 'audio/ogg' ||
          session.message.attachments[0].contentType === 'application/octet-stream');
 };
 
