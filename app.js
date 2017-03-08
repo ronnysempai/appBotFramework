@@ -42,7 +42,7 @@ var c=0;
 var card=1;
 var selectedCardName=3;
 var recibiendoImagen=0;
-var comisarias='Informacion de Comisarias \n';
+var comisarias='Comisarias \n';
 var hospitales='Hospitales \n';
 var denuncias='Denuncias';
 var CardNames = [comisarias,hospitales,denuncias];
@@ -111,7 +111,7 @@ function createCardInformacionComisarias(session){
     
     return new builder.HeroCard(session)
         .title('Comisarias Comisarias')
-        .subtitle('—')
+        //.subtitle('—')
         .text(listaComisarias)
         .images([
             //builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
@@ -155,7 +155,7 @@ function createCardInformacionHospitales2(session) {
 
     return new builder.ThumbnailCard(session)
         .title('Hospitales')
-        .subtitle('-')
+        //.subtitle('-')
         .text('-\n'+listaComisarias)
         .images([
             builder.CardImage.create(session, 'https://lh6.ggpht.com/U0n-NfYLqO7WMRHElgPgKyXDtDbwwzzAznk2HrL5o-rXzy-N-uqQ0qWVKDkWWz8TAaM=w300')
