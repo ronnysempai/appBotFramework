@@ -386,13 +386,16 @@ var params = {
   'keywords_threshold': 0.5
 };
 // Create the stream.
-var recognizeStream = speech_to_text.createRecognizeStream(params);
+//var recognizeStream = speech_to_text.createRecognizeStream(params);
+var recognizeStream;
 
 
 function proccesSpeechToText(url,fnSuccess){
     var name_file='file_2.oga';
+    recognizeStream= speech_to_text.createRecognizeStream(params)
 // Pipe in the audio.
 //fs.createReadStream(name_file).pipe(recognizeStream);
+    url = url.replace('https:', 'http:');
     http.get(url, response => {
       response.pipe(recognizeStream);
       transcription(fnSuccess);
