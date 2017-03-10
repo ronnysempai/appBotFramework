@@ -123,6 +123,13 @@ bot.dialog('recibirImagen', [
 bot.dialog('enviaVoz', session => {
     if (hasAudioAttachment(session)) {
         var stream = getAudioStreamFromAttachment(session.message.attachments[0]);
+        console.log('/////////////Audio/////////////');
+        proccesSpeechToText(session.message.attachments[0].contentUrl,function(text){
+            session.send(processText(text));
+            session.endDialog("");
+        });
+
+        /*console.log(session.message.attachments[0]);
         speechService.getTextFromAudioStream(stream)
             .then(text => {
                 session.send(processText(text));
@@ -131,12 +138,11 @@ bot.dialog('enviaVoz', session => {
             .catch(error => {
                 session.send('Oops! Something went wrong. Try again later.');
                 console.error(error);
-            });
+            });*/
     } else {
         session.send('Enviaste una nota de voz? Escucho mas de una persona. Trata de nuevo , por favor');
     }
 });
-
 
 //=========================================================
 // Utilities
@@ -145,6 +151,7 @@ const hasAudioAttachment = session => {
     return session.message.attachments.length > 0 &&
         (session.message.attachments[0].contentType === 'audio/wav' || 
             session.message.attachments[0].contentType === 'audio/ogg' ||
+            session.message.attachments[0].contentType === 'audio/oga' ||
          session.message.attachments[0].contentType === 'application/octet-stream');
 };
 
@@ -165,6 +172,7 @@ const getAudioStreamFromAttachment = attachment => {
 
     headers['Content-Type'] = attachment.contentType;
     return needle.get(attachment.contentUrl, { headers: headers });
+
 };
 
 const isSkypeAttachment = attachment => {
@@ -176,7 +184,7 @@ const isSkypeAttachment = attachment => {
 };
 
 const processText = (text) => {
-    var result = 'You said: ' + text + '.';
+    var result = 'tu dijiste: ' + text + '.';
     if (result.match("nombre")) {
         var iNombre=text.indexOf("nombre es")+9;
         var fNonbre=text.indexOf(" ",iNombre);
@@ -185,17 +193,17 @@ const processText = (text) => {
     }
     if (text && text.length > 0) {
         const wordCount = text.split(' ').filter(x => x).length;
-        result += '\n\nWord Count: ' + wordCount;
+        result += '\n\nConteo de Palabras: ' + wordCount;
 
         const characterCount = text.replace(/ /g, '').length;
-        result += '\n\nCharacter Count: ' + characterCount;
+        result += '\n\nConteo de Caracteres: ' + characterCount;
 
         const spaceCount = text.split(' ').length - 1;
-        result += '\n\nSpace Count: ' + spaceCount;
+        result += '\n\nConteo de espacios: ' + spaceCount;
 
         const m = text.match(/[aeiou]/gi);
         const vowelCount = m === null ? 0 : m.length;
-        result += '\n\nVowel Count: ' + vowelCount;
+        result += '\n\nConteo de Vocales: ' + vowelCount;
     }
 
     return result;
@@ -221,7 +229,7 @@ function createCardInformacionComisarias(session){
     var listaComisarias="Distrito 1-Sur "
     +" "
     //+"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
-    +"Distrito 2-Esteros "
+    +'\n\nDistrito 2-Esteros '
     +"Distrito 3-Nueve de Octubre "
     +"Distrito 4-Portete "
     +"Distrito 5-Centro ";
@@ -357,3 +365,64 @@ var obtainToken = Promise.promisify(connector.getAccessToken.bind(connector));
 var checkRequiresToken = function (message) {
     return message.source === 'skype' || message.source === 'msteams';
 };
+
+
+/*Speech-to-Text*/
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+var speech_to_text = new SpeechToTextV1 ({
+  username: "d147be33-ef46-4d02-9322-a27fc1e93a92",
+  password: "fsEZQSFcYcV3"
+});
+
+var params = {
+  model: 'es-ES_NarrowbandModel',
+  content_type: 'audio/ogg',
+  continuous: true,
+  'interim_results': true,
+  'max_alternatives': 3,
+  'word_confidence': false,
+  timestamps: false,
+  keywords: ['colorado', 'tornado', 'tornadoes'],
+  'keywords_threshold': 0.5
+};
+// Create the stream.
+var recognizeStream = speech_to_text.createRecognizeStream(params);
+
+
+function proccesSpeechToText(url,fnSuccess){
+    var name_file='file_2.oga';
+// Pipe in the audio.
+//fs.createReadStream(name_file).pipe(recognizeStream);
+    http.get(url, response => {
+      response.pipe(recognizeStream);
+      transcription(fnSuccess);
+    }); 
+}
+
+function transcription(fnSuccess){
+
+
+// Pipe out the transcription to a file.
+recognizeStream.pipe(fs.createWriteStream('transcription.txt'));
+
+// Get strings instead of buffers from 'data' events.
+recognizeStream.setEncoding('utf8');
+
+// Listen for events.
+recognizeStream.on('results', function(event) { onEvent('Results:', event); });
+recognizeStream.on('data', function(event) { onEvent('Data:', event); });
+recognizeStream.on('error', function(event) { onEvent('Error:', event); });
+recognizeStream.on('close', function(event) { onEvent('Close:', event); });
+recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
+
+// Displays events on the console.
+function onEvent(name, event) {   
+  console.log(name, JSON.stringify(event, null, 2));
+  console.log('*++++++++++++++++++++'+name+'****************************')
+  if("Data:"==name)
+  fnSuccess(event);
+};  
+
+}
+
+/**/
