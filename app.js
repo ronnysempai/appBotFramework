@@ -140,7 +140,8 @@ bot.dialog('enviaVoz', session => {
                 console.error(error);
             });*/
     } else {
-        session.send('Enviaste una nota de voz? Escucho mas de una persona. Trata de nuevo , por favor');
+        //session.send('Enviaste una nota de voz? Escucho mas de una persona. Trata de nuevo , por favor');
+        session.send('Por favor envia una nota de voz? ');
     }
 });
 
@@ -185,7 +186,7 @@ const isSkypeAttachment = attachment => {
 
 const processText = (text) => {
     var result = 'tu dijiste: ' + text + '.';
-    if (result.match("nombre")) {
+    if (result.match("nombre") || result.match("NOMBRE") ) {
         var iNombre=text.indexOf("nombre es")+9;
         var fNonbre=text.indexOf(" ",iNombre);
         var nombre=text.substr(iNombre, fNonbre);
@@ -247,28 +248,6 @@ function createCardInformacionComisarias(session){
         ]);
 }
 
-/*function createCardInformacionHospitales(session){
-    //var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
-    var listaComisarias="Distrito 1-Sur "
-    +" <b> - </b>"
-    //+"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
-    +"Distrito 2-Esteros "
-    +"Distrito 3-Nueve de Octubre "
-    +"Distrito 4-Portete "
-    +"Distrito 5-Centro ";
-    
-    return new builder.HeroCard(session)
-        .title('Comisarias Comisarias')
-        .subtitle('—')
-        .text(listaComisarias)
-        .images([
-            //builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
-            builder.CardImage.create(session, 'https://lh6.ggpht.com/U0n-NfYLqO7WMRHElgPgKyXDtDbwwzzAznk2HrL5o-rXzy-N-uqQ0qWVKDkWWz8TAaM=w300')
-        ])
-        .buttons([
-            builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Mas Informacion')
-        ]);
-}*/
 
 function createCardInformacionHospitales2(session) {
     var listaComisarias="Distrito 1-Sur "
@@ -420,8 +399,7 @@ recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 
 // Displays events on the console.
-function onEvent(name, event) {  
-    console.log(event); 
+function onEvent(name, event) {   
   console.log(name, JSON.stringify(event, null, 2));
   console.log('*++++++++++++++++++++'+name+'****************************')
   if("Data:"==name)
