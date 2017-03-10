@@ -420,7 +420,8 @@ recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 
 // Displays events on the console.
-function onEvent(name, event) {   
+function onEvent(name, event) {  
+    console.log(event); 
   console.log(name, JSON.stringify(event, null, 2));
   console.log('*++++++++++++++++++++'+name+'****************************')
   if("Data:"==name)
