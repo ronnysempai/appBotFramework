@@ -403,7 +403,7 @@ function transcription(fnSuccess){
 
 
 // Pipe out the transcription to a file.
-recognizeStream.pipe(fs.createWriteStream('transcription.txt'));
+//recognizeStream.pipe(fs.createWriteStream('transcription.txt'));
 
 // Get strings instead of buffers from 'data' events.
 recognizeStream.setEncoding('utf8');
