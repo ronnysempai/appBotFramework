@@ -396,6 +396,7 @@ function proccesSpeechToText(url,fnSuccess){
 // Pipe in the audio.
 //fs.createReadStream(name_file).pipe(recognizeStream);
     url = url.replace('https:', 'http:');
+    console.log(url);
     http.get(url, response => {
       response.pipe(recognizeStream);
       transcription(fnSuccess);
