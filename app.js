@@ -185,7 +185,7 @@ const isSkypeAttachment = attachment => {
 };
 
 const processText = (text) => {
-    var result = 'tu dijiste: ' + text + '.';
+    var result = 'Esta es tu denuncia : ' + text + '.';
     if (result.match("nombre") || result.match("NOMBRE") ) {
         var iNombre=text.toLowerCase().indexOf("nombre es")+9;
         var fNonbre=text.indexOf(" ",iNombre);
