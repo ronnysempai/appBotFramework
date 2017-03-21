@@ -115,7 +115,7 @@ bot.dialog('denuncias', [
 bot.dialog('ingreseTexto', [
     function (session) {
     builder.Prompts.text(session, "Send me your current location.");
-    var data = { method: "sendMessage", parameters: { text: "<b>Save time by sending us your current location.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Share location", request_location: true } ] ] } } };
+    var data = { method: "sendMessage", parameters: { text: "<b>Save time by sending us your current location.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ] ] } } };
     const message = new builder.Message(session);
     message.setChannelData(data);
     session.send(message);
@@ -125,6 +125,8 @@ bot.dialog('ingreseTexto', [
         if(session.message.entities.length != 0){
             session.userData.lat = session.message.entities[0].geo.latitude;
             session.userData.lon = session.message.entities[0].geo.longitude;
+            console.log('//////Latitud:'+session.message.entities[0].geo.latitude );
+            console.log('//////Longitud:'+session.message.entities[0].geo.longitude );
             session.endDialog();
         }else{
             session.endDialog("Sorry, I didn't get your location.");
