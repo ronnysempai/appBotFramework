@@ -101,12 +101,36 @@ bot.dialog('denuncias', [
                 session.beginDialog('enviaVoz');
                 break;
             case 'Texto':
-                session.beginDialog('ingreseTexto');
+                //session.beginDialog('ingreseTexto');
+                session.send("Ahora ud puede enviar su denuncia como un mensaje:");
+                session.beginDialog("ingreseTexto");
                 break;  
              default:
                 session.endDialog("");     
                 break;
             }
+    }
+]);
+
+bot.dialog('ingreseTexto', [
+    function (session) {
+    builder.Prompts.text(session, "Send me your current location.");
+    var data = { method: "sendMessage", parameters: { text: "<b>Save time by sending us your current location.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Share location", request_location: true } ] ] } } };
+    const message = new builder.Message(session);
+    message.setChannelData(data);
+    session.send(message);
+    },
+    function (session, results) {
+
+        if(session.message.entities.length != 0){
+            session.userData.lat = session.message.entities[0].geo.latitude;
+            session.userData.lon = session.message.entities[0].geo.longitude;
+            session.endDialog();
+        }else{
+            session.endDialog("Sorry, I didn't get your location.");
+        }
+        session.endDialog(""); 
+        
     }
 ]);
 
@@ -128,7 +152,6 @@ bot.dialog('enviaVoz', session => {
             session.send(processText(text));
             session.endDialog("");
         });
-
         /*console.log(session.message.attachments[0]);
         speechService.getTextFromAudioStream(stream)
             .then(text => {
@@ -170,10 +193,8 @@ const getAudioStreamFromAttachment = attachment => {
             return needle.get(attachment.contentUrl, { headers: headers });
         });
     }
-
     headers['Content-Type'] = attachment.contentType;
     return needle.get(attachment.contentUrl, { headers: headers });
-
 };
 
 const isSkypeAttachment = attachment => {
@@ -185,14 +206,14 @@ const isSkypeAttachment = attachment => {
 };
 
 const processText = (text) => {
-    var result = 'Esta es tu denuncia : ' + text + '.';
+    var result = '\n\nEsta es tu denuncia : ' + text + '.';
     if (result.match("nombre") || result.match("NOMBRE") ) {
         var iNombre=text.toLowerCase().indexOf("nombre es")+9;
-        var fNonbre=text.indexOf(" ",iNombre);
-        var nombre=text.substr(iNombre, fNonbre);
+        var fNombre=text.indexOf(" ",iNombre);
+        var nombre=text.substr(iNombre, fNombre);
         result="Hola "+nombre+' '+result;
     }
-    if (text && text.length > 0) {
+    if (text && text.length > 0 && false) {
         const wordCount = text.split(' ').filter(x => x).length;
         result += '\n\nConteo de Palabras: ' + wordCount;
 
@@ -206,7 +227,6 @@ const processText = (text) => {
         const vowelCount = m === null ? 0 : m.length;
         result += '\n\nConteo de Vocales: ' + vowelCount;
     }
-
     return result;
 };
 
@@ -224,23 +244,19 @@ function createMyCard(session) {
             builder.CardAction.openUrl(session, 'https://docs.botframework.com/en-us/', 'Mas Informacion')
         ]);
 }
-
 function createCardInformacionComisarias(session){
-    //var listaComisarias="Distrito 1-Sur Lugar: Instalaciones de la Comisaría del distrito, ubicado en la ciudadela Nueve de Octubre, calle Sexta y Av. Séptima (atrás de APROFE).(Contacto: Comisario de Policía, Abg. Félix Lavayen Consuegra, 0999642149)"
     var listaComisarias="Distrito 1-Sur "
     +" "
     //+"Distrito 2-Esteros Lugar: Instalaciones de la Comisaría del distrito, ubicada en la Unidad de Vigilancia Comunitaria (UVC), en la ciudadela Los Esteros diagonal al colegio José María Egas. (Contacto: Comisario de Policía, Abg. Luis Vivar Gaybort, 0997953241)";
     +'\n\nDistrito 2-Esteros '
     +"Distrito 3-Nueve de Octubre "
     +"Distrito 4-Portete "
-    +"Distrito 5-Centro ";
-    
+    +"Distrito 5-Centro ";   
     return new builder.HeroCard(session)
         .title('Comisarias Comisarias')
         //.subtitle('—')
         .text(listaComisarias)
         .images([
-            //builder.CardImage.create(session, 'https://sec.ch9.ms/ch9/7ff5/e07cfef0-aa3b-40bb-9baa-7c9ef8ff7ff5/buildreactionbotframework_960.jpg')
             builder.CardImage.create(session, 'https://lh6.ggpht.com/U0n-NfYLqO7WMRHElgPgKyXDtDbwwzzAznk2HrL5o-rXzy-N-uqQ0qWVKDkWWz8TAaM=w300')
         ])
         .buttons([
@@ -281,12 +297,10 @@ function seleccionarOpcion(selectedCardName, session) {
             return 0;
     }
 }
-
 /**/
 /*
 */
 function recibirImagen(session){
-
     var msg = session.message;
     if (msg.attachments.length){
         // Message with attachment, proceed to download it.
@@ -317,7 +331,6 @@ function recibirImagen(session){
         .text('Ahora ud puede enviar la imagen de su denuncia.');
         session.send(reply);
     }*/
-    
 }
 function guardarImagen(url){
     var file = fs.createWriteStream("file.jpg");
@@ -337,15 +350,11 @@ var requestWithToken = function (url) {
         });
     });
 };
-
 // Promise for obtaining JWT Token (requested once)
 var obtainToken = Promise.promisify(connector.getAccessToken.bind(connector));
-
 var checkRequiresToken = function (message) {
     return message.source === 'skype' || message.source === 'msteams';
 };
-
-
 /*Speech-to-Text*/
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var speech_to_text = new SpeechToTextV1 ({
@@ -367,8 +376,6 @@ var params = {
 // Create the stream.
 //var recognizeStream = speech_to_text.createRecognizeStream(params);
 var recognizeStream;
-
-
 function proccesSpeechToText(url,fnSuccess){
     var name_file='file_2.oga';
     recognizeStream= speech_to_text.createRecognizeStream(params)
@@ -383,21 +390,16 @@ function proccesSpeechToText(url,fnSuccess){
 }
 
 function transcription(fnSuccess){
-
-
 // Pipe out the transcription to a file.
 //recognizeStream.pipe(fs.createWriteStream('transcription.txt'));
-
 // Get strings instead of buffers from 'data' events.
 recognizeStream.setEncoding('utf8');
-
 // Listen for events.
 recognizeStream.on('results', function(event) { onEvent('Results:', event); });
 recognizeStream.on('data', function(event) { onEvent('Data:', event); });
 recognizeStream.on('error', function(event) { onEvent('Error:', event); });
 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
-
 // Displays events on the console.
 function onEvent(name, event) {   
   console.log(name, JSON.stringify(event, null, 2));
@@ -407,5 +409,4 @@ function onEvent(name, event) {
 };  
 
 }
-
 /**/
