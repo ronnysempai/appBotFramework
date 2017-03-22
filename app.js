@@ -113,7 +113,7 @@ bot.dialog('ingreseTexto', [
     session.send(message);
     },
     function (session, results) {
-        console.dir(session.message)
+        console.dir(session.message.sourceEvent.message.contact)
         if(session.message.entities.length != 0){
             session.userData.lat = session.message.entities[0].geo.latitude;
             session.userData.lon = session.message.entities[0].geo.longitude;
