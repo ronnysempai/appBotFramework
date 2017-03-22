@@ -11,13 +11,11 @@ var fs = require('fs'),
 //=========================================================
 // Bot Setup
 //=========================================================
-
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
-  
 // Create chat bot
 var connector = new builder.ChatConnector({
     appId: '661ed9ab-edf1-4d04-99a8-8eb99ec982dd',//process.env.MICROSOFT_APP_ID,
@@ -33,7 +31,6 @@ var bot = new builder.UniversalBot(connector, [
     }
 ]);
 server.post('/api/messages', connector.listen());
-
 //=========================================================
 // Bots Dialogs
 //=========================================================
@@ -50,7 +47,6 @@ var comisarias='Comisarias \n';
 var hospitales='Hospitales \n';
 var denuncias='Denuncias';
 var CardNames = [comisarias,hospitales,denuncias];
-
 bot.dialog('rootMenu', [
     function (session) {
         console.log(session.message.text);
@@ -73,9 +69,7 @@ bot.dialog('rootMenu', [
         session.send(msg);    
         }else{
             session.beginDialog('denuncias');
-
-        }
-         
+        }   
     }
 ]);
 
@@ -88,9 +82,7 @@ bot.dialog('denuncias', [
         
     },
     function (session, results) {
-
-        var opcion = results.response.entity;
-        
+        var opcion = results.response.entity;      
         switch (opcion){
             case 'Foto':
                     console.log('*************** imagen***********************');
@@ -115,13 +107,12 @@ bot.dialog('denuncias', [
 bot.dialog('ingreseTexto', [
     function (session) {
     builder.Prompts.text(session, "Por favor envie su Ubicacion.");
-    var data = { method: "sendMessage", parameters: { text: "<b>Por favor Comparta su Ubicacion.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ] ] } } };
+    var data = { method: "sendMessage", parameters: { text: "<b>Por favor Comparta su Ubicacion.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ],[ { text: "Comparta su Contacto", request_contact: true } ] ] } } };
     const message = new builder.Message(session);
     message.setChannelData(data);
     session.send(message);
     },
     function (session, results) {
-
         if(session.message.entities.length != 0){
             session.userData.lat = session.message.entities[0].geo.latitude;
             session.userData.lon = session.message.entities[0].geo.longitude;
@@ -132,107 +123,9 @@ bot.dialog('ingreseTexto', [
             session.endDialog("Sorry, I didn't get your location.");
         }
         session.endDialog(""); 
-        
     }
 ]);
 
-bot.dialog('recibirImagen', [
-    function (session) {
-        recibirImagen(session);
-    },
-    function (session, results) {
-        
-        
-    }
-]);
-/*codigo para voz*/
-bot.dialog('enviaVoz', session => {
-    if (hasAudioAttachment(session)) {
-        var stream = getAudioStreamFromAttachment(session.message.attachments[0]);
-        console.log('/////////////Audio/////////////');
-        proccesSpeechToText(session.message.attachments[0].contentUrl,function(text){
-            session.send(processText(text));
-            session.endDialog("");
-        });
-        /*console.log(session.message.attachments[0]);
-        speechService.getTextFromAudioStream(stream)
-            .then(text => {
-                session.send(processText(text));
-                session.endDialog("");
-            })
-            .catch(error => {
-                session.send('Oops! Something went wrong. Try again later.');
-                console.error(error);
-            });*/
-    } else {
-        //session.send('Enviaste una nota de voz? Escucho mas de una persona. Trata de nuevo , por favor');
-        session.send('Por favor envia una nota de voz? ');
-    }
-});
-
-//=========================================================
-// Utilities
-//=========================================================
-const hasAudioAttachment = session => {
-    return session.message.attachments.length > 0 &&
-        (session.message.attachments[0].contentType === 'audio/wav' || 
-            session.message.attachments[0].contentType === 'audio/ogg' ||
-            session.message.attachments[0].contentType === 'audio/oga' ||
-         session.message.attachments[0].contentType === 'application/octet-stream');
-};
-
-const getAudioStreamFromAttachment = attachment => {
-    var headers = {};
-    if (isSkypeAttachment(attachment)) {
-        // The Skype attachment URLs are secured by JwtToken,
-        // you should set the JwtToken of your bot as the authorization header for the GET request your bot initiates to fetch the image.
-        // https://github.com/Microsoft/BotBuilder/issues/662
-        connector.getAccessToken((error, token) => {
-            var tok = token;
-            headers['Authorization'] = 'Bearer ' + token;
-            headers['Content-Type'] = 'application/octet-stream';
-
-            return needle.get(attachment.contentUrl, { headers: headers });
-        });
-    }
-    headers['Content-Type'] = attachment.contentType;
-    return needle.get(attachment.contentUrl, { headers: headers });
-};
-
-const isSkypeAttachment = attachment => {
-    if (url.parse(attachment.contentUrl).hostname.substr(-'skype.com'.length) === 'skype.com') {
-        return true;
-    }
-
-    return false;
-};
-
-const processText = (text) => {
-    var result = '\n\nEsta es tu denuncia : ' + text + '.';
-    if (result.match("nombre") || result.match("NOMBRE") ) {
-        var iNombre=text.toLowerCase().indexOf("nombre es")+9;
-        var fNombre=text.indexOf(" ",iNombre);
-        var nombre=text.substr(iNombre, fNombre);
-        result="Hola "+nombre+' '+result;
-    }
-    if (text && text.length > 0 && false) {
-        const wordCount = text.split(' ').filter(x => x).length;
-        result += '\n\nConteo de Palabras: ' + wordCount;
-
-        const characterCount = text.replace(/ /g, '').length;
-        result += '\n\nConteo de Caracteres: ' + characterCount;
-
-        const spaceCount = text.split(' ').length - 1;
-        result += '\n\nConteo de espacios: ' + spaceCount;
-
-        const m = text.match(/[aeiou]/gi);
-        const vowelCount = m === null ? 0 : m.length;
-        result += '\n\nConteo de Vocales: ' + vowelCount;
-    }
-    return result;
-};
-
-/*------------------------------*/
 function createMyCard(session) {
     return new builder.HeroCard(session)
         .title('Atencion Ciudadana')
@@ -266,7 +159,6 @@ function createCardInformacionComisarias(session){
         ]);
 }
 
-
 function createCardInformacionHospitales2(session) {
     var listaComisarias="Distrito 1-Sur "
     +" "
@@ -299,9 +191,18 @@ function seleccionarOpcion(selectedCardName, session) {
             return 0;
     }
 }
-/**/
-/*
-*/
+
+/*codigo recibir Imagen*/
+bot.dialog('recibirImagen', [
+    function (session) {
+        recibirImagen(session);
+    },
+    function (session, results) {
+        
+        
+    }
+]);
+
 function recibirImagen(session){
     var msg = session.message;
     if (msg.attachments.length){
@@ -357,7 +258,95 @@ var obtainToken = Promise.promisify(connector.getAccessToken.bind(connector));
 var checkRequiresToken = function (message) {
     return message.source === 'skype' || message.source === 'msteams';
 };
-/*Speech-to-Text*/
+/*--fin codigo recibir Imagen-*/
+
+/*codigo para voz*/
+bot.dialog('enviaVoz', session => {
+    if (hasAudioAttachment(session)) {
+        var stream = getAudioStreamFromAttachment(session.message.attachments[0]);
+        console.log('/////////////Audio/////////////');
+        proccesSpeechToText(session.message.attachments[0].contentUrl,function(text){
+            session.send(processText(text));
+            session.endDialog("");
+        });
+        /*console.log(session.message.attachments[0]);
+        speechService.getTextFromAudioStream(stream)
+            .then(text => {
+                session.send(processText(text));
+                session.endDialog("");
+            })
+            .catch(error => {
+                session.send('Oops! Something went wrong. Try again later.');
+                console.error(error);
+            });*/
+    } else {
+        //session.send('Enviaste una nota de voz? Escucho mas de una persona. Trata de nuevo , por favor');
+        session.send('Por favor envia una nota de voz? ');
+    }
+});
+//=========================================================
+// Utilities
+//=========================================================
+const hasAudioAttachment = session => {
+    return session.message.attachments.length > 0 &&
+        (session.message.attachments[0].contentType === 'audio/wav' || 
+            session.message.attachments[0].contentType === 'audio/ogg' ||
+            session.message.attachments[0].contentType === 'audio/oga' ||
+         session.message.attachments[0].contentType === 'application/octet-stream');
+};
+
+const getAudioStreamFromAttachment = attachment => {
+    var headers = {};
+    if (isSkypeAttachment(attachment)) {
+        // The Skype attachment URLs are secured by JwtToken,
+        // you should set the JwtToken of your bot as the authorization header for the GET request your bot initiates to fetch the image.
+        // https://github.com/Microsoft/BotBuilder/issues/662
+        connector.getAccessToken((error, token) => {
+            var tok = token;
+            headers['Authorization'] = 'Bearer ' + token;
+            headers['Content-Type'] = 'application/octet-stream';
+
+            return needle.get(attachment.contentUrl, { headers: headers });
+        });
+    }
+    headers['Content-Type'] = attachment.contentType;
+    return needle.get(attachment.contentUrl, { headers: headers });
+};
+
+const isSkypeAttachment = attachment => {
+    if (url.parse(attachment.contentUrl).hostname.substr(-'skype.com'.length) === 'skype.com') {
+        return true;
+    }
+    return false;
+};
+
+const processText = (text) => {
+    var result = '\n\nEsta es tu denuncia : ' + text + '.';
+    if (result.match("nombre") || result.match("NOMBRE") ) {
+        var iNombre=text.toLowerCase().indexOf("nombre es")+9;
+        var fNombre=text.indexOf(" ",iNombre);
+        var nombre=text.substr(iNombre, fNombre);
+        result="Hola "+nombre+' '+result;
+    }
+    if (text && text.length > 0 && false) {
+        const wordCount = text.split(' ').filter(x => x).length;
+        result += '\n\nConteo de Palabras: ' + wordCount;
+
+        const characterCount = text.replace(/ /g, '').length;
+        result += '\n\nConteo de Caracteres: ' + characterCount;
+
+        const spaceCount = text.split(' ').length - 1;
+        result += '\n\nConteo de espacios: ' + spaceCount;
+
+        const m = text.match(/[aeiou]/gi);
+        const vowelCount = m === null ? 0 : m.length;
+        result += '\n\nConteo de Vocales: ' + vowelCount;
+    }
+    return result;
+};
+/*------------------------------*/
+/**/
+/*Speech-to-Text Watson*/
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var speech_to_text = new SpeechToTextV1 ({
   username: "d147be33-ef46-4d02-9322-a27fc1e93a92",
@@ -403,12 +392,11 @@ recognizeStream.on('error', function(event) { onEvent('Error:', event); });
 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 // Displays events on the console.
-function onEvent(name, event) {   
-  console.log(name, JSON.stringify(event, null, 2));
-  console.log('*++++++++++++++++++++'+name+'****************************')
-  if("Data:"==name)
-  fnSuccess(event);
-};  
-
+    function onEvent(name, event) {   
+      console.log(name, JSON.stringify(event, null, 2));
+      console.log('*++++++++++++++++++++'+name+'****************************')
+      if("Data:"==name)
+      fnSuccess(event);
+    };  
 }
 /**/
