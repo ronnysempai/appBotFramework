@@ -230,6 +230,7 @@ function recibirImagen(session){
                 session.send(reply);
                 session.endDialog("");
             }).catch(function (err) {
+                console.dir(err);
                 console.log('Error downloading attachment:', { statusCode: err.statusCode, message: err.response.statusMessage });
             });
 
