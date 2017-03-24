@@ -242,6 +242,7 @@ function recibirImagen(session){
 }
 function guardarImagen(url){
     var file = fs.createWriteStream("file.jpg");
+    console.log('CREANDO ARCHIVO PARA IMAGEN ');
     var request = http.get(url, function(response) {
         response.pipe(file);
     });
