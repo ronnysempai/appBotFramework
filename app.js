@@ -226,7 +226,7 @@ function recibirImagen(session){
                     //.text('Attachment of %s type and size of %s bytes received.', attachment.contentType, response.length);
                     .text(mensajeExito);
                 console.log(attachment);
-                //guardarImagen(attachment.contentUrl);    
+                guardarImagen(attachment.contentUrl);    
                 session.send(reply);
                 session.endDialog("");
             }).catch(function (err) {
