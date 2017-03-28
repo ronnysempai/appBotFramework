@@ -71,7 +71,7 @@ setInterval(function () {
         });
 
     });
-}, 5000);
+}, 60000);
 
 bot.dialog('rootMenu', [
     function (session) {
