@@ -47,10 +47,14 @@ var comisarias='Comisarias \n';
 var hospitales='Hospitales \n';
 var denuncias='Denuncias';
 var CardNames = [comisarias,hospitales,denuncias];
+
+
+
 bot.dialog('rootMenu', [
     function (session) {
         console.log(session.message.text);
         recibirImagen(session);
+
         builder.Prompts.choice(session, 'Buenos dias,este es el canal informativo de atencion ciudadana'
         +' puedes elegir una opcion de la siguiente lista ,Que opcion quieres?', CardNames, {
             maxRetries: 3,
@@ -93,6 +97,7 @@ bot.dialog('denuncias', [
                 session.beginDialog('enviaVoz');
                 break;
             case 'Texto':
+            console.dir(session.message.address);
                 //session.beginDialog('ingreseTexto');
                 session.send("Ahora ud puede enviar su denuncia como un mensaje:");
                 session.beginDialog("ingreseTexto");
@@ -122,7 +127,8 @@ bot.dialog('ingreseTexto', [
             session.endDialog();
         }else
         if(session.message.sourceEvent.message.contact){
-            console.dir(session.message.sourceEvent.message.contact);    
+            console.dir(session.message.sourceEvent.message.contact);  
+
         }
         else{
             session.endDialog("Sorry, I didn't get your location.");
@@ -184,10 +190,24 @@ function createCardInformacionHospitales2(session) {
         ]);
 }
 
+function createVideoCard(session) {
+    return new builder.VideoCard(session)
+        .title('Informativo')
+        .subtitle('-')
+        .text('.')
+        .image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
+        .media([
+            { url: 'https://www.dropbox.com/home?preview=rfid.avi' }
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'https://peach.blender.org/', 'Learn More')
+        ]);
+}
+
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return createCardInformacionComisarias(session);
+            return createVideoCard(session);  //createCardInformacionComisarias(session);
         case hospitales:
             return createCardInformacionHospitales2(session);
         case denuncias:
@@ -400,7 +420,7 @@ recognizeStream.on('error', function(event) { onEvent('Error:', event); });
 recognizeStream.on('close', function(event) { onEvent('Close:', event); });
 recognizeStream.on('speaker_labels', function(event) { onEvent('Speaker_Labels:', event); });
 // Displays events on the console.
-    function onEvent(name, event) {   
+    function onEvent(name, event){   
       console.log(name, JSON.stringify(event, null, 2));
       console.log('*++++++++++++++++++++'+name+'****************************')
       if("Data:"==name)
