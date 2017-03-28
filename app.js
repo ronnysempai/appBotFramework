@@ -232,6 +232,7 @@ function createCardInBoletin(session) {
         .buttons([
             builder.CardAction.openUrl(session, 'http://www.ministeriointerior.gob.ec/en-guayaquil-las-ferias-comunitarias-fomentan-seguridad-y-compromiso-ciudadano/', 'Mas Informacion')
         ]);
+        session.endDialog('');
 }
 function createVideoCard(session) {
     return new builder.VideoCard(session)
@@ -262,7 +263,7 @@ function seleccionarOpcion(selectedCardName, session) {
 
 bot.dialog('boletin', [
     function (session) {
-        
+        createCardInBoletin(session);
     },
     function (session, results) {
         
