@@ -263,7 +263,7 @@ function seleccionarOpcion(selectedCardName, session) {
 
 bot.dialog('boletin', [
     function (session) {
-        session.endDialog();
+        
         createCardInBoletin(session);
     },
     function (session, results) {
