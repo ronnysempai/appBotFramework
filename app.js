@@ -54,14 +54,14 @@ setInterval(function () {
     var newAddresses = userStore.splice(0);
     newAddresses.forEach(function (address) {
 
-        console.log('Starting survey for address:', address);
+        console.log('Starting dialog for address:', address);
 
         // new conversation address, copy without conversationId
         var newConversationAddress = Object.assign({}, address);
         delete newConversationAddress.conversation;
 
         // start survey dialog
-        bot.beginDialog(newConversationAddress, 'denuncias', null, function (err) {
+        bot.beginDialog(newConversationAddress, 'boletin', null, function (err) {
             if (err) {
                 // error ocurred while starting new conversation. Channel not supported?
                 bot.send(new builder.Message()
@@ -71,7 +71,7 @@ setInterval(function () {
         });
 
     });
-}, 60000);
+}, 3*60000);
 
 bot.dialog('rootMenu', [
     function (session) {
@@ -215,6 +215,24 @@ function createCardInformacionHospitales2(session) {
         ]);
 }
 
+function createCardInBoletin(session) {
+    var contenido="Guayaquil.- En la segunda etapa de la ciudadela"
+     +"El Recreo, del cantón Durán, se llevó a cabo la Feria Ciudadana, "
+     +"la misma que contó con la participación de diferentes entidades gubernamentales,"
+     +" entre ellos la Dirección Nacional de la Policía Especializada de niños, niñas y adolescentes (Dinapen).";
+    var fecha = new Date();
+    var n = fecha.toString();
+    return new builder.ThumbnailCard(session)
+        .title('Informe')
+        .subtitle(' '+n)
+        .text(' '+contenido)
+        .images([
+            builder.CardImage.create(session, 'http://www.ministeriointerior.gob.ec/wp-content/uploads/2017/03/Screen-Shot-2017-03-28-at-1.42.18-PM.png')
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'http://www.ministeriointerior.gob.ec/en-guayaquil-las-ferias-comunitarias-fomentan-seguridad-y-compromiso-ciudadano/', 'Mas Informacion')
+        ]);
+}
 function createVideoCard(session) {
     return new builder.VideoCard(session)
         .title('Informativo')
@@ -232,7 +250,7 @@ function createVideoCard(session) {
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return createVideoCard(session);  //createCardInformacionComisarias(session);
+            return  createCardInformacionComisarias(session);
         case hospitales:
             return createCardInformacionHospitales2(session);
         case denuncias:
@@ -241,6 +259,16 @@ function seleccionarOpcion(selectedCardName, session) {
             return 0;
     }
 }
+
+bot.dialog('boletin', [
+    function (session) {
+        
+    },
+    function (session, results) {
+        
+        
+    }
+]);
 
 /*codigo recibir Imagen*/
 bot.dialog('recibirImagen', [
