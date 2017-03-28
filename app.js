@@ -47,8 +47,31 @@ var comisarias='Comisarias \n';
 var hospitales='Hospitales \n';
 var denuncias='Denuncias';
 var CardNames = [comisarias,hospitales,denuncias];
+var userStore = [];
 
+// Every 5 seconds, check for new registered users and start a new dialog
+setInterval(function () {
+    var newAddresses = userStore.splice(0);
+    newAddresses.forEach(function (address) {
 
+        console.log('Starting survey for address:', address);
+
+        // new conversation address, copy without conversationId
+        var newConversationAddress = Object.assign({}, address);
+        delete newConversationAddress.conversation;
+
+        // start survey dialog
+        bot.beginDialog(newConversationAddress, 'denuncias', null, function (err) {
+            if (err) {
+                // error ocurred while starting new conversation. Channel not supported?
+                bot.send(new builder.Message()
+                    .text('This channel does not support this operation: ' + err.message)
+                    .address(address));
+            }
+        });
+
+    });
+}, 5000);
 
 bot.dialog('rootMenu', [
     function (session) {
@@ -128,7 +151,9 @@ bot.dialog('ingreseTexto', [
         }else
         if(session.message.sourceEvent.message.contact){
             console.dir(session.message.sourceEvent.message.contact);  
-
+            // store user's address
+            var address = session.message.address;
+            userStore.push(address);
         }
         else{
             session.endDialog("Sorry, I didn't get your location.");
