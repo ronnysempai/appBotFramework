@@ -263,7 +263,7 @@ function seleccionarOpcion(selectedCardName, session) {
 
 bot.dialog('boletin', [
     function (session) {
-        
+
         var card=createCardInBoletin(session);
         var msg = new builder.Message(session).addAttachment(card);
         session.send(msg);    
@@ -271,7 +271,7 @@ bot.dialog('boletin', [
     },
     function (session, results) {
         
-        
+        session.endDialog();
     }
 ]);
 
