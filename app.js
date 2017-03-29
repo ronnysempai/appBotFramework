@@ -90,7 +90,7 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-        var data = { method: "sendMessage", parameters: { text: "<h1>Informe.</h1>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ],[ { text: "Comparta su Contacto", request_contact: true } ] ] } } };
+        var data = { method: "sendMessage", parameters: { text: "<b>Informe.</b> <pre>pre-formatted fixed-width code block</pre>", parse_mode: "HTML" } };
         const message = new builder.Message(session);
         message.setChannelData(data);
         session.send(message);
