@@ -90,6 +90,7 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         
         if(selectedOption!=denuncias){
+            
             hacerMarkup(session);
             /*card = seleccionarOpcion(selectedOption, session);
             // attach the card to the reply message
