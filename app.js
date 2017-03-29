@@ -90,8 +90,12 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-            
-            hacerMarkup(session);
+            var data = { method: "sendMessage", 
+            parameters: { text: "<h1>"+titulo+"</h1> "+contenido+" ", parse_mode: "HTML" 
+             } };
+            const message = new builder.Message(session);
+            message.setChannelData(data);
+            session.send(message);
             /*card = seleccionarOpcion(selectedOption, session);
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
