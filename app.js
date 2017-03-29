@@ -94,7 +94,7 @@ bot.dialog('rootMenu', [
             var contenido='info';
             var data = { method: "sendMessage", 
             parameters: { text: "<h1>"+titulo+"</h1> "+contenido+" ", parse_mode: "HTML" 
-             } };
+            , reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ],[ { text: "Comparta su Contacto", request_contact: true } ] ] } } };
             const message = new builder.Message(session);
             message.setChannelData(data);
             session.send(message);
