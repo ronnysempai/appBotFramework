@@ -251,7 +251,7 @@ function createVideoCard(session) {
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return  createCardInformacionComisarias(session);
+            return createVideoCard(session);  //createCardInformacionComisarias(session);
         case hospitales:
             return createCardInformacionHospitales2(session);
         case denuncias:
