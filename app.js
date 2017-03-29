@@ -90,10 +90,11 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         
         if(selectedOption!=denuncias){
+        
             card = seleccionarOpcion(selectedOption, session);
-        // attach the card to the reply message
-        var msg = new builder.Message(session).addAttachment(card);
-        session.send(msg);    
+            // attach the card to the reply message
+            var msg = new builder.Message(session).addAttachment(card);
+            session.send(msg);    
         }else{
             session.beginDialog('denuncias');
         }   
@@ -251,7 +252,7 @@ function createVideoCard(session) {
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return createVideoCard(session);  //createCardInformacionComisarias(session);
+            return hacerMarkup(session); //createVideoCard(session);  //createCardInformacionComisarias(session);
         case hospitales:
             return createCardInformacionHospitales2(session);
         case denuncias:
@@ -274,6 +275,21 @@ bot.dialog('boletin', [
         session.endDialog();
     }
 ]);
+
+function hacerMarkup(session){
+    var contenido="Guayaquil.- En la segunda etapa de la ciudadela"
+     +"El Recreo, del cantón Durán, se llevó a cabo la Feria Ciudadana, "
+     +"la misma que contó con la participación de diferentes entidades gubernamentales,"
+     +" entre ellos la Dirección Nacional de la Policía Especializada de niños, niñas y adolescentes (Dinapen).";
+     var titulo='Informe';
+     var imagen='<img src="http://www.ministeriointerior.gob.ec/wp-content/uploads/2017/03/Screen-Shot-2017-03-28-at-1.42.18-PM.png" alt="Smiley face" height="100" width="100">';
+    var data = { method: "sendMessage", 
+    parameters: { text: "<h1>"+titulo+"</h1> "+imagen+" "+contenido+" ", parse_mode: "HTML" 
+     } };
+    const message = new builder.Message(session);
+    message.setChannelData(data);
+    session.send(message);
+}
 
 /*codigo recibir Imagen*/
 bot.dialog('recibirImagen', [
