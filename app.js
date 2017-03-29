@@ -83,14 +83,14 @@ bot.dialog('rootMenu', [
             maxRetries: 3,
             retryPrompt: 'disculpe, se ingreso una opcion invalida'
         });
-
+        hacerMarkup(session);
     },
     function (session, results){
         
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-            
+
             /*card = seleccionarOpcion(selectedOption, session);
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
@@ -252,7 +252,7 @@ function createVideoCard(session) {
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return hacerMarkup(session); //createVideoCard(session);  //createCardInformacionComisarias(session);
+            return createVideoCard(session);  //createCardInformacionComisarias(session);
         case hospitales:
             return createCardInformacionHospitales2(session);
         case denuncias:
