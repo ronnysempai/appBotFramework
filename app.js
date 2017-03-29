@@ -88,7 +88,7 @@ bot.dialog('rootMenu', [
     function (session, results){
         
         selectedOption = results.response.entity;
-        
+        console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
             
             hacerMarkup(session);
