@@ -90,6 +90,7 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
+            var titulo="Informe";
             var data = { method: "sendMessage", 
             parameters: { text: "<h1>"+titulo+"</h1> "+contenido+" ", parse_mode: "HTML" 
              } };
