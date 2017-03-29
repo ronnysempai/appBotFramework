@@ -90,7 +90,7 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-        var data = { method: "sendMessage", parameters: { text: "<b>Por favor Comparta su Ubicacion o su Contacto.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ],[ { text: "Comparta su Contacto", request_contact: true } ] ] } } };
+        var data = { method: "sendMessage", parameters: { text: "<b>Informe.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ],[ { text: "Comparta su Contacto", request_contact: true } ] ] } } };
         const message = new builder.Message(session);
         message.setChannelData(data);
         session.send(message);
