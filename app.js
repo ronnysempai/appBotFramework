@@ -90,14 +90,7 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-            var titulo="Informe";
-            var contenido='info';
-            var data = { method: "sendMessage", 
-            parameters: { text: "<h1>"+titulo+"</h1> "+contenido+" ", parse_mode: "HTML" 
-            , reply_markup: { keyboard: [ [ { text: "Comparta su Ubicacion", request_location: true } ],[ { text: "Comparta su Contacto", request_contact: true } ] ] } } };
-            const message = new builder.Message(session);
-            message.setChannelData(data);
-            session.send(message);
+            
             /*card = seleccionarOpcion(selectedOption, session);
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
