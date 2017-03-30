@@ -50,7 +50,7 @@ var CardNames = [comisarias,hospitales,denuncias];
 var userStore = [];
 
 // Every 5 seconds, check for new registered users and start a new dialog
-/*setInterval(function () {
+setInterval(function () {
     var newAddresses = userStore.splice(0);
     newAddresses.forEach(function (address) {
 
@@ -71,7 +71,7 @@ var userStore = [];
         });
 
     });
-}, 3*60000);*/
+}, 5*60000);
 
 bot.dialog('rootMenu', [
     function (session) {
@@ -252,7 +252,7 @@ function createVideoCard(session) {
 function seleccionarOpcion(selectedCardName, session) {
     switch (selectedCardName) {
         case comisarias:
-            return createVideoCard(session);  //createCardInformacionComisarias(session);
+            return createCardInformacionComisarias(session);
         case hospitales:
             return createCardInformacionHospitales2(session);
         case denuncias:
