@@ -90,11 +90,11 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-            hacerMarkup(session);
-            /*card = seleccionarOpcion(selectedOption, session);
+            //hacerMarkup(session);
+            card = seleccionarOpcion(selectedOption, session);
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
-            session.send(msg);    */
+            session.send(msg);    
         }else{
             session.beginDialog('denuncias');
         }   
@@ -283,9 +283,9 @@ function hacerMarkup(session){
      +"la misma que contó con la participación de diferentes entidades gubernamentales,"
      
      var titulo='Informe';
-     var imagen='<img src="http://www.ministeriointerior.gob.ec/wp-content/uploads/2017/03/Screen-Shot-2017-03-28-at-1.42.18-PM.png" alt="Smiley face" height="100" width="100">';
+     
     var data = { method: "sendMessage", 
-    parameters: { text: "<b>"+titulo+"</b> "+imagen+" "+contenido+" ", parse_mode: "HTML" 
+    parameters: { text: "<b>"+titulo+"</b> "+contenido+" ", parse_mode: "HTML" 
      } };
     const message = new builder.Message(session);
     message.setChannelData(data);
