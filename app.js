@@ -90,10 +90,7 @@ bot.dialog('rootMenu', [
         selectedOption = results.response.entity;
         console.log('<-------Opcion->>>>>>> '+selectedOption);
         if(selectedOption!=denuncias){
-        var data = { method: "sendMessage", parameters: { text: "<b>Informe.</b></br> <pre>pre-formatted fixed-width code block</pre>", parse_mode: "HTML" } };
-        const message = new builder.Message(session);
-        message.setChannelData(data);
-        session.send(message);
+            hacerMarkup(session);
             /*card = seleccionarOpcion(selectedOption, session);
             // attach the card to the reply message
             var msg = new builder.Message(session).addAttachment(card);
@@ -288,7 +285,7 @@ function hacerMarkup(session){
      var titulo='Informe';
      var imagen='<img src="http://www.ministeriointerior.gob.ec/wp-content/uploads/2017/03/Screen-Shot-2017-03-28-at-1.42.18-PM.png" alt="Smiley face" height="100" width="100">';
     var data = { method: "sendMessage", 
-    parameters: { text: "<h1>"+titulo+"</h1> "+imagen+" "+contenido+" ", parse_mode: "HTML" 
+    parameters: { text: "<b>"+titulo+"</b> "+imagen+" "+contenido+" ", parse_mode: "HTML" 
      } };
     const message = new builder.Message(session);
     message.setChannelData(data);
